@@ -49,7 +49,7 @@ dynamic_deploy_blueprint = Blueprint("dynamic_deploy", __name__)
 @admins_only
 def test_connection():
     try:
-        url = request.form['url'] + '/test'
+        url = request.form['url']
         passcode = request.form['passcode']
         if utils.do_test_connection(url,passcode):
             return 'Success'
@@ -72,7 +72,7 @@ def deploy():
 
         challenge = models.query_FishChallengeTable(cid)
         if challenge:
-            url = challenge.url + '/deploy'
+            url = challenge.url
             passcode = challenge.passcode
             con_url = utils.do_deploy(url,uid,passcode)
             if con_url:
@@ -93,7 +93,7 @@ def destroy():
         if models.query_container(cid,uid):
             fish_challenge = models.query_FishChallengeTable(cid)
             if fish_challenge:
-                url = fish_challenge.url + '/destroy'
+                url = fish_challenge.url
                 passcode = fish_challenge.passcode
                 if utils.do_destroy(url,uid,passcode):
                     models.delete_containter(cid,uid)

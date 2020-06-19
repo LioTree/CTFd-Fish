@@ -23,7 +23,6 @@ from CTFd.utils.user import get_ip
 from flask_apscheduler import APScheduler
 
 from . import routes,models,utils
-import requests
 
 
 class FishChallenge(BaseChallenge):
@@ -100,6 +99,8 @@ class FishChallenge(BaseChallenge):
         db.session.add(challenge)
         db.session.commit()
 
+        utils.do_clear(data['url'],data['passcode']) # 开局全清
+
         return challenge
 
     @staticmethod
@@ -169,12 +170,17 @@ class FishChallenge(BaseChallenge):
         ChallengeFiles.query.filter_by(challenge_id=challenge.id).delete()
         Tags.query.filter_by(challenge_id=challenge.id).delete()
         Hints.query.filter_by(challenge_id=challenge.id).delete()
-        models.FishChallengeTable.query.filter_by(id=challenge.id).delete()
-        Challenges.query.filter_by(id=challenge.id).delete()
 
-        # 删除该challenge动态部署的container
+        fish_challenge = models.query_FishChallengeTable(challenge.id)
+        utils.do_clear(fish_challenge.url,fish_challenge.passcode) # 删除运行中的容器
+        models.FishChallengeTable.query.filter_by(id=challenge.id).delete() # 删除FishChallenge
+        # 删除该challenge动态部署的container记录
         models.Container.query.filter_by(cid=challenge.id).delete()
         # writeup的记录就不删了
+
+        #因为FishChallengeTable的id是外码，所以Challenge要最后删
+        Challenges.query.filter_by(id=challenge.id).delete() 
+
         db.session.commit()
 
     @staticmethod
@@ -264,10 +270,9 @@ def load(app):
                     cid = con.cid
                     uid = con.uid
                     fish_challenge = models.query_FishChallengeTable(cid)
-                    url = fish_challenge.url + '/destroy'
+                    url = fish_challenge.url
                     passcode = fish_challenge.passcode
-                    data = {'uid':uid,'passcode':passcode}
-                    requests.post(url=url,data=data)
+                    utils.do_destroy(url,uid,passcode)
                     models.delete_containter(cid,uid)
 
     scheduler = APScheduler()

@@ -22,6 +22,7 @@ def secure_filename(filename):
 
 def do_test_connection(url,passcode):
     try:
+        url = url + '/test'
         data = {'passcode':passcode}
         response = requests.post(url=url,data=data).text
         if response == 'Success':
@@ -33,6 +34,7 @@ def do_test_connection(url,passcode):
 
 def do_deploy(url,uid,passcode):
     try:
+        url = url + '/deploy'
         data = {'uid':uid,'passcode':passcode}
         response = requests.post(url=url,data=data).text
         if response[0:7] == 'Success':
@@ -45,6 +47,7 @@ def do_deploy(url,uid,passcode):
 
 def do_destroy(url,uid,passcode):
     try:
+        url = url + '/destroy'
         data = {'uid':uid,'passcode':passcode}
         response = requests.post(url=url,data=data).text
         if response == 'Success':
@@ -53,3 +56,13 @@ def do_destroy(url,uid,passcode):
     except:
         return False
 
+def do_clear(url,passcode):
+    try:
+        url = url + '/clear'
+        data = {'passcode':passcode}
+        response = requests.post(url=url,data=data).text
+        if response == 'Success':
+            return True
+        return False
+    except:
+        return False
