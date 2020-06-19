@@ -1,0 +1,163 @@
+<div class="modal-dialog" role="document">
+	<div class="modal-content">
+		<div class="modal-body">
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+			<ul class="nav nav-tabs">
+				<li class="nav-item">
+					<a class="nav-link active" href="#challenge">Challenge</a>
+				</li>
+				{% if solves == None %}
+				{% else %}
+				<li class="nav-item">
+					<a class="nav-link challenge-solves" href="#solves">
+						{{ solves }} {% if solves > 1 %}Solves{% else %}Solves{% endif %}
+					</a>
+				</li>
+				{% endif %}
+				<li class="nav-item">
+					<a class="nav-link upload-writeup" href="#writeup" id="writeup-tab">Upload Writeup</a>
+				</li>
+			</ul>
+			<div role="tabpanel">
+				<div class="tab-content">
+					<div role="tabpanel" class="tab-pane fade show active" id="challenge">
+						<h2 class='challenge-name text-center pt-3'>{{ name }}</h2>
+						<h3 class="challenge-value text-center">{{ value }}</h3>
+						<div class="challenge-tags text-center">
+							{% for tag in tags %}
+							<span class='badge badge-info challenge-tag'>{{ tag }}</span>
+							{% endfor %}
+						</div>
+						<span class="challenge-desc">{{ description | safe }}</span>
+						<div class="challenge-hints hint-row row">
+							{% for hint in hints %}
+							<div class='col-md-12 hint-button-wrapper text-center mb-3'>
+								<a class="btn btn-info btn-hint btn-block load-hint" href="javascript:;"
+									data-hint-id="{{ hint.id }}">
+									{% if hint.hint %}
+									<small>
+										View Hint
+									</small>
+									{% else %}
+									{% if hint.cost %}
+									<small>
+										Unlock Hint for {{ hint.cost }} points
+									</small>
+									{% else %}
+									<small>
+										View Hint
+									</small>
+									{% endif %}
+									{% endif %}
+								</a>
+							</div>
+							{% endfor %}
+						</div>
+						<div class="row challenge-files text-center pb-3">
+							{% for file in files %}
+							<div class='col-md-4 col-sm-4 col-xs-12 file-button-wrapper d-block'>
+								<a class='btn btn-info btn-file mb-1 d-inline-block px-2 w-100 text-truncate'
+									href='{{ file }}'>
+									<i class="fas fa-download"></i>
+									<small>
+										{% set segments = file.split('/') %}
+										{% set file = segments | last %}
+										{% set token = file.split('?') | last %}
+										{% if token %}
+										{{ file | replace("?" + token, "") }}
+										{% else %}
+										{{ file }}
+										{% endif %}
+									</small>
+								</a>
+							</div>
+							{% endfor %}
+						</div>
+
+						<div class="row submit-row">
+							<div class="col-md-12 form-group" style="text-align:center" id="dynamic_deploy">
+								<button class="btn btn-success" id="deploy" style="width: 40%;">Deploy</button>
+								<!-- <button class="btn btn-danger" id="destroy" style="width: 40%;margin-left: 5%;">Destroy</button> -->
+								<!-- <button class="btn btn-primary" id="renew" style="width: 40%;margin-right: 5%;float:right">Renew</button> -->
+							</div>
+						</div>
+
+						<div class="row submit-row">
+							<div class="col-md-9 form-group">
+								<input class="form-control" type="text" name="answer" id="submission-input"
+									placeholder="Flag" />
+								<input id="challenge-id" type="hidden" value="{{ id }}">
+							</div>
+							<div class="col-md-3 form-group key-submit">
+								<button type="submit" id="submit-key" tabindex="0"
+									class="btn btn-md btn-outline-secondary float-right">Submit
+								</button>
+							</div>
+						</div>
+						<div class="row notification-row">
+							<div class="col-md-12">
+								<div id="result-notification" class="alert alert-dismissable text-center w-100"
+									role="alert" style="display: none;">
+									<strong id="result-message"></strong>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div role="tabpanel" class="tab-pane fade" id="solves">
+						<div class="row">
+							<div class="col-md-12">
+								<table class="table table-striped text-center">
+									<thead>
+										<tr>
+											<td><b>Name</b>
+											</td>
+											<td><b>Date</b>
+											</td>
+										</tr>
+									</thead>
+									<tbody id="challenge-solves-names">
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<!-- Upload writeup-->
+					<div role="tabpanel" class="tab-pane fade" id="writeup">
+						<div class="row">
+							<div class="col-md-12">
+								<table class="table table-striped text-center">
+									<thead>
+										<tr>
+											<td>
+												<input class="form-control-file" type="file" name="file"
+													id="upload-writeup" multiple="multiple">
+											</td>
+											<td>
+												<button class="btn btn-success float-right"
+													id="submit-files">Upload</button>
+											</td>
+										</tr>
+									</thead>
+								</table>
+							</div>
+						</div>
+						<!-- 是否上传成功 -->
+						<div class="row notification-row">
+							<div class="col-md-12">
+								<div id="upload-result-notification"
+									class="alert alert-info alert-dismissable text-center" role="alert">
+									<strong id="upload-result-message">Not uploaded</strong>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="/plugins/CTFd_Fish/assets/writeup.js"></script>
+<script src="/plugins/CTFd_Fish/assets/dynamic_deploy.js"></script>
