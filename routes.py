@@ -52,12 +52,10 @@ def test_connection():
     try:
         url = request.form['url'] + '/test'
         passcode = request.form['passcode']
-        data = {'passcode':passcode}
-        response = requests.post(url=url,data=data).text
-        if response == 'Success':
+        if utils.do_test_connection(url,passcode):
             return 'Success'
         else:
-            raise
+            return 'Error'
     except:
         return 'Error'
 
@@ -77,15 +75,11 @@ def deploy():
         if challenge:
             url = challenge.url + '/deploy'
             passcode = challenge.passcode
-            data = {'uid':uid,'passcode':passcode}
-            response = requests.post(url=url,data=data).text
-            if response[0:7] == 'Success':
-                con_url = response[8:]
+            con_url = utils.do_deploy(url,uid,passcode)
+            if con_url:
                 models.insert_container(cid,uid,start_time,con_url)
                 return 'Success '+con_url+' '+'3600'
-            raise
-        else:
-            raise
+        return 'Error'
     except:
         return 'Error'
 
@@ -102,14 +96,10 @@ def destroy():
             if fish_challenge:
                 url = fish_challenge.url + '/destroy'
                 passcode = fish_challenge.passcode
-                data = {'uid':uid,'passcode':passcode}
-                response = requests.post(url=url,data=data).text
-                if response == 'Success':
+                if utils.do_destroy(url,uid,passcode):
                     models.delete_containter(cid,uid)
                     return 'Success'
-            raise
-        else:
-            raise
+        return 'Error'
     except:
         return 'Error'
 
@@ -125,8 +115,7 @@ def renew():
         if models.query_container(cid,uid):
             models.alter_containter(cid,uid,start_time)
             return 'Success'
-        else:
-            raise
+        return 'Error'
     except:
         return 'Error'
 
