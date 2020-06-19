@@ -3,7 +3,6 @@ from flask import Blueprint,render_template,request
 from CTFd.utils.decorators import authed_only,admins_only
 from CTFd.utils.user import get_current_user
 from . import models,utils
-import requests
 import time
 
 #################writeup上传的路由################
