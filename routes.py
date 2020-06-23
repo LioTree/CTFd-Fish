@@ -118,11 +118,11 @@ def renew():
     except:
         return 'Error'
 
-@dynamic_deploy_blueprint.route('/status',methods=['POST'])
+@dynamic_deploy_blueprint.route('/status',methods=['GET'])
 @authed_only
 def status():
     try:
-        cid = request.form['challenge_id']
+        cid = request.args['challenge_id']
         uid = get_current_user().id
         now = time.time()
         con = models.query_container(cid,uid)

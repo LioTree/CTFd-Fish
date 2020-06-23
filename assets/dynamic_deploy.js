@@ -5,16 +5,13 @@ var timer;
 var timeout = 3600;
 
 $(document).ready(function () {
-    $.post('/status', {
-            challenge_id: challenge_id,
-            nonce: nonce
-        },
+    $.get('/status?challenge_id=' + challenge_id,
         function (data, status) {
             datas = data.split(' ');
             if (datas[0] == 'Success') {
                 con_url = datas[1];
                 new_timeout = datas[2];
-                doDeploy(new_timeout,con_url);
+                doDeploy(new_timeout, con_url);
             } else if (data == 'No') {
                 return;
             } else {
@@ -33,7 +30,7 @@ $('#dynamic_deploy').on('click', '#deploy', function () {
             if (datas[0] == 'Success') {
                 con_url = datas[1];
                 new_timeout = datas[2];
-                doDeploy(new_timeout,con_url);
+                doDeploy(new_timeout, con_url);
             } else if (data == 'Repeat') {
                 alert('One user can only deploy one container!')
             } else {
@@ -70,7 +67,7 @@ $('#dynamic_deploy').on('click', '#renew', function () {
         });
 });
 
-function doDeploy(new_timeout,con_url) {
+function doDeploy(new_timeout, con_url) {
     var destroy_btn = '<button class="btn btn-danger" id="destroy" style="width: 40%;margin-left: 5%;">Destroy</button>';
     var renew_btn = '<button class="btn btn-primary" id="renew" style="width: 40%;margin-right: 5%;float:right">Renew</button>';
     var parent_div = $("#deploy").parent();
