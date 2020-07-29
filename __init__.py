@@ -29,18 +29,18 @@ class FishChallenge(BaseChallenge):
     id = "CTFd-Fish"  # Unique identifier used to register challenges
     name = "CTFd-Fish"  # Name of a challenge type
     templates = {  # Handlebars templates used for each aspect of challenge editing & viewing
-        "create": "/plugins/CTFd_Fish/assets/create.html",
-        "update": "/plugins/CTFd_Fish/assets/update.html",
-        "view": "/plugins/CTFd_Fish/assets/view.html",
+        "create": "/plugins/CTFd-Fish/assets/create.html",
+        "update": "/plugins/CTFd-Fish/assets/update.html",
+        "view": "/plugins/CTFd-Fish/assets/view.html",
     }
     scripts = {  # Scripts that are loaded when a template is loaded
-        "create": "/plugins/CTFd_Fish/assets/create.js",
-        "update": "/plugins/CTFd_Fish/assets/update.js",
-        "view": "/plugins/CTFd_Fish/assets/view.js",
-        "writeup": "/plugins/CTFd_Fish/assets/writeup.js",
+        "create": "/plugins/CTFd-Fish/assets/create.js",
+        "update": "/plugins/CTFd-Fish/assets/update.js",
+        "view": "/plugins/CTFd-Fish/assets/view.js",
+        "writeup": "/plugins/CTFd-Fish/assets/writeup.js",
     }
     # Route at which files are accessible. This must be registered using register_plugin_assets_directory()
-    route = "/plugins/CTFd_Fish/assets/"
+    route = "/plugins/CTFd-Fish/assets/"
     # Blueprint used to access the static_folder directory.
     blueprint = Blueprint(
         "CTFd-Fish",
@@ -257,7 +257,7 @@ def load(app):
     app.db.create_all()
     CHALLENGE_CLASSES["CTFd-Fish"] = FishChallenge
     register_plugin_assets_directory(
-        app, base_path="/plugins/CTFd_Fish/assets/"
+        app, base_path="/plugins/CTFd-Fish/assets/"
     )
     app.register_blueprint(routes.writeup_blueprint)
     app.register_blueprint(routes.dynamic_deploy_blueprint)

@@ -1,7 +1,7 @@
 from CTFd.models import db,Challenges
 import time
 
-####################CTFd_Fish类型的challenge##########################
+####################CTFd-Fish类型的challenge##########################
 class FishChallengeTable(Challenges):
     __mapper_args__ = {"polymorphic_identity": "CTFd-Fish"}
     id = db.Column(None, db.ForeignKey("challenges.id"), primary_key=True)
